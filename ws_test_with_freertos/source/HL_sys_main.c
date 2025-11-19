@@ -50,6 +50,7 @@
 #include "HL_sys_common.h"
 
 /* USER CODE BEGIN (1) */
+#include "../main.h"
 /* USER CODE END */
 
 /** @fn void main(void)
@@ -66,6 +67,7 @@
 int main(void)
 {
 /* USER CODE BEGIN (3) */
+    actual_main();
 /* USER CODE END */
 
     return 0;

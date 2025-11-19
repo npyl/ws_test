@@ -29,7 +29,6 @@
 #include "HL_hal_stdtypes.h"
 #include "HL_reg_mibspi.h"
 
-#include "types.h"
 #include "fw_globals.h"
 
 /*----------------------------------------------------------------------------\

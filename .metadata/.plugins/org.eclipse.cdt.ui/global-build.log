@@ -6596,3 +6596,42 @@ gmake[1]: 'ws_test_with_freertos.out' is up to date.
 gmake[1]: 'ws_test_with_freertos.out' is up to date.
 
 **** Build Finished ****
+
+**** Build of configuration Debug for project ws_test_with_freertos ****
+
+"C:\\ti\\ccs1281\\ccs\\utils\\bin\\gmake" -k -j 12 all -O 
+ 
+Building file: "../main.c"
+Invoking: Arm Compiler
+"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7R5 --code_state=32 --float_support=VFPv3D16 --include_path="C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/data_manager" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_adc" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_crc" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_dio" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_gio" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_globals" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_utils" --include_path="C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/include" -g --diag_warning=225 --diag_wrap=off --display_error_number --enum_type=packed --abi=eabi --preproc_with_compile --preproc_dependency="main.d_raw"  "../main.c"
+"C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_dio/fw_dio.h", line 109: warning #869-D: type qualifier on return type is meaningless
+"C:/Users/npyla/Documents/_dev/_embedded/ws_test/ws_test_with_freertos/components/fw_dio/fw_dio.h", line 110: warning #869-D: type qualifier on return type is meaningless
+"../main.c", line 19: warning #225-D: function "printf" declared implicitly
+"../main.c", line 28: warning #225-D: function "toggle_output_pin" declared implicitly
+Finished building: "../main.c"
+ 
+Building target: "ws_test_with_freertos.out"
+Invoking: Arm Linker
+"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7R5 --code_state=32 --float_support=VFPv3D16 -g --diag_warning=225 --diag_wrap=off --display_error_number --enum_type=packed --abi=eabi -z -m"ws_test_with_freertos.map" --heap_size=0x800 --stack_size=0x800 -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1281/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ws_test_with_freertos_linkInfo.xml" --rom_model --be32 -o "ws_test_with_freertos.out" "./main.obj" "./components/data_manager/data_manager.obj" "./components/fw_adc/fw_adc.obj" "./components/fw_crc/fw_crc.obj" "./components/fw_dio/fw_dio.obj" "./components/fw_gio/fw_gio_dmm.obj" "./components/fw_gio/fw_gio_het.obj" "./components/fw_gio/fw_gio_mibspi.obj" "./components/fw_globals/_svc.obj" "./components/fw_globals/fw_globals.obj" "./components/fw_globals/svc.obj" "./components/fw_utils/fw_utils.obj" "./source/HL_epc.obj" "./source/HL_errata.obj" "./source/HL_errata_SSWF021_45.obj" "./source/HL_esm.obj" "./source/HL_gio.obj" "./source/HL_nmpu.obj" "./source/HL_notification.obj" "./source/HL_pinmux.obj" "./source/HL_sys_core.obj" "./source/HL_sys_dma.obj" "./source/HL_sys_intvecs.obj" "./source/HL_sys_main.obj" "./source/HL_sys_mpu.obj" "./source/HL_sys_pcr.obj" "./source/HL_sys_phantom.obj" "./source/HL_sys_pmm.obj" "./source/HL_sys_pmu.obj" "./source/HL_sys_startup.obj" "./source/HL_sys_vim.obj" "./source/HL_system.obj" "./source/os_croutine.obj" "./source/os_event_groups.obj" "./source/os_heap.obj" "./source/os_list.obj" "./source/os_mpu_wrappers.obj" "./source/os_port.obj" "./source/os_portasm.obj" "./source/os_queue.obj" "./source/os_tasks.obj" "./source/os_timer.obj" "../source/HL_sys_link.cmd"  -llibc.a 
+<Linking>
+warning #10247-D: creating output section ".sysmem" without a SECTIONS specification
+Finished building target: "ws_test_with_freertos.out"
+ 
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project ws_test_with_freertos ****
+
+"C:\\ti\\ccs1281\\ccs\\utils\\bin\\gmake" -k -j 12 all -O 
+ 
+gmake[1]: 'ws_test_with_freertos.out' is up to date.
+
+**** Build Finished ****
+
+**** Build of configuration Debug for project ws_test_with_freertos ****
+
+"C:\\ti\\ccs1281\\ccs\\utils\\bin\\gmake" -k -j 12 all -O 
+ 
+gmake[1]: 'ws_test_with_freertos.out' is up to date.
+
+**** Build Finished ****

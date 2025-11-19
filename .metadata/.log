@@ -2098,3 +2098,27 @@ java.net.UnknownHostException: software-dl.ti.com
 	at com.ti.ccstudio.app.center.internal.CCSAppCenter.access$1(CCSAppCenter.java:205)
 	at com.ti.ccstudio.app.center.internal.CCSAppCenter$1.run(CCSAppCenter.java:177)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:38.188
+!MESSAGE DS_ERROR: IcePick: Error: (Error -261 @ 0xFFFFFEFB) Invalid response was received from the XDS110. (Emulation package 20.0.0.3178) 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:38.198
+!MESSAGE DS_ERROR: Dap: Error: (Error -261 @ 0x0) Invalid response was received from the XDS110. (Emulation package 20.0.0.3178) 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:38.444
+!MESSAGE DS_ERROR: Dap: Unable to determine target status after 20 attempts
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:38.459
+!MESSAGE DS_ERROR: Dap: Failed to remove the debug state from the target before disconnecting.  There may still be breakpoint op-codes embedded in program memory.  It is recommended that you reset the emulator before you connect and reload your program before you continue debugging
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:38.994
+!MESSAGE DS_ERROR: CortexR5: JTAG Communication Error: (Error -261 @ 0x0) Invalid response was received from the XDS110. (Emulation package 20.0.0.3178) 
+
+
+!ENTRY com.ti.ccstudio.debug 1 0 2025-11-19 12:21:39.053
+!MESSAGE DS_ERROR: CortexR5: Failed to remove the debug state from the target before disconnecting.  There may still be breakpoint op-codes embedded in program memory.  It is recommended that you reset the emulator before you connect and reload your program before you continue debugging
+

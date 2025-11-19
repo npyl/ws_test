@@ -1,0 +1,125 @@
+/*----------------------------------------------------------------------------\
+|          Copyright(c) 2024 Jerry Pylarinos.                                 |
+|          This program is protected by copyright and information             |
+|          contained therein is confidential. The program may not be          |
+|          copied and the information may not be used or disclosed            |
+|          except with the written permission of the proprietor(s).           |
+|                                                                             |
+|-----------------------------------------------------------------------------|
+|                                                                             |
+|   Module Name  : fw_dio.h Header File.                                      |
+|                                                                             |
+|   Author       : Jerry Pylarinos                                            |
+|                                                                             |
+|   Date         : 8 …·Ì 2024                                                 |
+|                                                                             |
+|-----------------------------------------------------------------------------|
+|                                                                             |
+|   <Module Header Description>                                               |
+|                                                                             |
+\----------------------------------------------------------------------------*/
+
+#ifndef fw_dio_H
+#define fw_dio_H
+
+/*----------------------------------------------------------------------------\
+|   Header Files                                                              |
+\----------------------------------------------------------------------------*/
+
+#include "HL_hal_stdtypes.h"
+
+#include "fw_globals.h"
+#include "fw_types.h"
+
+/*----------------------------------------------------------------------------\
+|   Public Type Definitions                                                   |
+\----------------------------------------------------------------------------*/
+
+typedef enum
+{
+    eDIO_PORTA = 0u,
+    eDIO_PORTB,
+    eDIO_MAX_PORTS,
+} E_DIO_PORT_ID;
+
+/*
+ * Digital input pin IDs
+ */
+typedef enum
+{
+    eDIO_INPUT_PIN_0 = 0u,
+    eDIO_INPUT_PIN_1,
+    eDIO_INPUT_PIN_2,
+    eDIO_INPUT_PIN_3,
+    eDIO_NUM_INPUT_PINS,
+} E_DIO_INPUT_PIN_ID;
+
+/*
+ * Single digital I/P definition.
+ * This structure defines a single GPI pin
+ */
+typedef struct
+{
+    CHAR                label[ 32u ];   /* Label of GPI */
+    E_DIO_INPUT_PIN_ID  id;             /* ID of GPI */
+    E_DIO_PORT_ID       port;
+    U8                  pin;
+    E_PULL_UP_DOWN      pull;
+    BOOLEAN             pull_enable;
+    BOOLEAN             value;
+    BOOLEAN             enabled;
+} S_DIO_INPUT_PIN_DEF;
+
+/*
+ * Digital output pin IDs
+ */
+typedef enum
+{
+    eDIO_OUTPUT_PIN_0 = 0u,
+    eDIO_OUTPUT_PIN_1,
+    eDIO_OUTPUT_PIN_2,
+    eDIO_OUTPUT_PIN_3,
+    eDIO_NUM_OUTPUT_PINS,
+} E_DIO_OUTPUT_PIN_ID;
+
+/*
+ * Single digital I/P definition.
+ * This structure defines a single GPO pin
+ */
+typedef struct
+{
+    CHAR                label[ 32u ];   /* Label of GPO */
+    E_DIO_OUTPUT_PIN_ID id;             /* ID of GPO */
+    E_DIO_PORT_ID       port;
+    U8                  pin;
+    BOOLEAN             open_drain;
+    BOOLEAN             value;
+    BOOLEAN             enabled;
+} S_DIO_OUTPUT_PIN_DEF;
+
+/*----------------------------------------------------------------------------\
+|   Public Constant Declarations                                              |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Public Data Declarations                                                  |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Public Function Declarations                                              |
+\----------------------------------------------------------------------------*/
+
+void dioHandlerInit( void );
+BOOLEAN dioHandlerInitInputPins( void );
+BOOLEAN dioHandlerInitOutputPins( void );
+const S_DIO_INPUT_PIN_DEF * const dioConfigGetDIConfig( void );
+const S_DIO_OUTPUT_PIN_DEF * const dioConfigGetDOConfig( void );
+void set_digital_output( E_DIO_OUTPUT_PIN_ID pin_id, BOOLEAN value );
+BOOLEAN read_digital_input ( E_DIO_INPUT_PIN_ID pin_id );
+void read_digital_inputs( void );
+
+/*----------------------------------------------------------------------------\
+|   End of fw_dio.h header file                                               |
+\----------------------------------------------------------------------------*/
+
+#endif  /* fw_dio_H */

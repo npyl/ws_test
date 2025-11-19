@@ -44,6 +44,19 @@
 								<option id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.1901011597" name="Wrap diagnostic messages (--diag_wrap) [deprecated]" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.DIAG_WRAP.off" valueType="enumerated"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH.1183717268" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.TMS470_20.2.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_1000ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_100ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_10ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_2000ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_25ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_2ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_5000ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_500ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_50ms}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks/task_GK}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/config}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/App_Tasks}"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/OS/tasks}"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/components/data_manager}"/>
 									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/components/fw_adc}"/>

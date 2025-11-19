@@ -1,0 +1,328 @@
+/*----------------------------------------------------------------------------\
+|          Copyright(c) 2024 Jerry Pylarinos.                                 |
+|          This program is protected by copyright and information             |
+|          contained therein is confidential. The program may not be          |
+|          copied and the information may not be used or disclosed            |
+|          except with the written permission of the proprietor(s).           |
+|                                                                             |
+|-----------------------------------------------------------------------------|
+|                                                                             |
+|   Module Name  : fw_dio.c Module File.                                      |
+|                                                                             |
+|   Author       : Jerry Pylarinos                                            |
+|                                                                             |
+|   Date         : 8 …·Ì 2024                                                 |
+|                                                                             |
+|-----------------------------------------------------------------------------|
+|                                                                             |
+|   <Module Description>                                                      |
+|                                                                             |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Compiler Controls                                                         |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Header Files                                                              |
+\----------------------------------------------------------------------------*/
+
+#include "HL_reg_gio.h"
+
+#include "fw_dio.h"
+
+/*----------------------------------------------------------------------------\
+|   Private Type Definitions                                                  |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Private Constant Definitions                                              |
+\----------------------------------------------------------------------------*/
+
+static const S_DIO_INPUT_PIN_DEF dio_input_pin_defs[ eDIO_NUM_INPUT_PINS ] =
+{
+};
+
+static const S_DIO_OUTPUT_PIN_DEF dio_output_pin_defs[ eDIO_NUM_OUTPUT_PINS ] =
+{
+     {
+          .label = "USER LED 2",
+          .id = eDIO_OUTPUT_PIN_LED_6,
+          .port = eDIO_PORTB,
+          .pin = 6u,
+          .open_drain = FALSE,
+          .value = 0,
+          .enabled = TRUE,
+     },
+     {
+          .label = "USER LED 3",
+          .id = eDIO_OUTPUT_PIN_LED_7,
+          .port = eDIO_PORTB,
+          .pin = 7u,
+          .open_drain = FALSE,
+          .value = 0,
+          .enabled = TRUE,
+     },
+};
+
+/*----------------------------------------------------------------------------\
+|   Private Data Declarations                                                 |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Public Constant Declarations                                              |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Private Function Declarations                                             |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   Public Function Implementations                                           |
+\----------------------------------------------------------------------------*/
+
+void dioHandlerInit( void )
+{
+    /* TODO If required: Data Manager DIO initialization */
+
+    /* Bring GIO module out of reset */
+    gioREG->GCR0   = 1U;
+    gioREG->ENACLR = 0xFFU;
+    gioREG->LVLCLR = 0xFFU;
+}
+
+void set_digital_output( E_DIO_OUTPUT_PIN_ID pin_id, BOOLEAN value )
+{
+    S_DM_DIGITAL_IO *ptr_dm_digital_outputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
+    const S_DIO_OUTPUT_PIN_DEF * const ptr_cfg = dioConfigGetDOConfig();
+
+    if ( ( ptr_cfg[ pin_id ].enabled == TRUE ) && ( pin_id < eDIO_NUM_OUTPUT_PINS ) )
+    {
+        switch ( ptr_cfg[ pin_id ].port )
+        {
+            case eDIO_PORTA:
+                gioSetBit( gioPORTA, ptr_cfg[ pin_id ].pin, value );
+                break;
+            case eDIO_PORTB:
+                gioSetBit( gioPORTB, ptr_cfg[ pin_id ].pin, value );
+                break;
+            default:
+                break;
+        }
+        ptr_dm_digital_outputs->ptr_digital_io->digital_outputs[ pin_id ].value = value;
+    }
+}
+
+BOOLEAN read_digital_input( E_DIO_INPUT_PIN_ID pin_id )
+{
+    BOOLEAN value;
+    S_DM_DIGITAL_IO *ptr_dm_digital_inputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
+    const S_DIO_INPUT_PIN_DEF * const ptr_cfg = dioConfigGetDIConfig();
+
+    if ( ( ptr_cfg[ pin_id ].enabled == TRUE ) && ( pin_id < eDIO_NUM_INPUT_PINS ) )
+    {
+        switch ( ptr_cfg[ pin_id ].port )
+        {
+            case eDIO_PORTA:
+                value = ( BOOLEAN ) gioGetBit( gioPORTA, ptr_cfg[ pin_id ].pin );
+                break;
+            case eDIO_PORTB:
+                value = ( BOOLEAN ) gioGetBit( gioPORTB, ptr_cfg[ pin_id ].pin );
+                break;
+            default:
+                break;
+        }
+        ptr_dm_digital_inputs->ptr_digital_io->digital_inputs[ pin_id ].value = value;
+    }
+
+    return value;
+}
+
+void read_digital_inputs( void )
+{
+    int i;
+    const S_DIO_INPUT_PIN_DEF * const ptr_cfg = dioConfigGetDIConfig();
+
+    for ( i = ptr_cfg[ 0 ].id; i < eDIO_NUM_INPUT_PINS; i++ )
+    {
+        read_digital_input( ptr_cfg[ i ].id );
+    }
+}
+
+const S_DIO_INPUT_PIN_DEF * const dioConfigGetDIConfig( void )
+{
+    /* Return the address of the Digital Inputs configuration data */
+    return dio_input_pin_defs;
+}
+
+BOOLEAN dioHandlerInitInputPins( void )
+{
+    int i;
+    BOOLEAN ok = TRUE;
+    const S_DIO_INPUT_PIN_DEF * const ptr_cfg = dioConfigGetDIConfig();
+
+    for ( i = 0; i < eDIO_NUM_INPUT_PINS; i++ )
+    {
+        if ( ptr_cfg[ i ].enabled == TRUE )
+        {
+            switch ( ptr_cfg[ i ].port )
+            {
+                case eDIO_PORTA:
+                    gioPORTA->DIR |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );          /* Set pin direction to input */
+                    if ( ptr_cfg->pull_enable == TRUE )                                         /* Set input pin pull enable/disable */
+                    {
+                        gioPORTA->PULDIS |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );   /* Pull enable */
+                    }
+                    else
+                    {
+                        gioPORTA->PULDIS |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );   /* Pull disable */
+                    }
+                    if ( ptr_cfg[ i ].pull == ePULL_DOWN )                                      /* Set input pin pull up/down */
+                    {
+                        gioPORTA->PSL |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Pull down */
+                    }
+                    else if ( ptr_cfg[ i ].pull == ePULL_UP )
+                    {
+                        gioPORTA->PSL |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Pull up */
+                    }
+                    else                                                                        /* Pull none: Leave as from POR */
+                    {
+                        ;
+                    }
+                    break;
+                case eDIO_PORTB:
+                    gioPORTB->DIR |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );          /* Set pin direction to input */
+                    if ( ptr_cfg->pull_enable == TRUE )                                         /* Set input pin pull enable/disable */
+                    {
+                        gioPORTB->PULDIS |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );   /* Pull enable */
+                    }
+                    else
+                    {
+                        gioPORTB->PULDIS |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );   /* Pull disable */
+                    }
+                    if ( ptr_cfg[ i ].pull == ePULL_DOWN )                                      /* Set input pin pull up/down */
+                    {
+                        gioPORTB->PSL |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Pull down */
+                    }
+                    else if ( ptr_cfg[ i ].pull == ePULL_UP )
+                    {
+                        gioPORTB->PSL |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Pull up */
+                    }
+                    else                                                                        /* Pull none: Leave as from POR */
+                    {
+                        ;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    return ok;
+}
+
+const S_DIO_OUTPUT_PIN_DEF * const dioConfigGetDOConfig( void )
+{
+    /* Return the address of the Digital Outputs configuration data */
+    return dio_output_pin_defs;
+}
+
+BOOLEAN dioHandlerInitOutputPins( void )
+{
+    int i;
+    BOOLEAN ok = TRUE;
+    const S_DIO_OUTPUT_PIN_DEF * const ptr_cfg = dioConfigGetDOConfig();
+
+    for ( i = 0; i < eDIO_NUM_OUTPUT_PINS; i++ )
+    {
+        if ( ptr_cfg[ i ].enabled == TRUE )
+        {
+            switch ( ptr_cfg[ i ].port )
+            {
+                case eDIO_PORTA:
+                    gioPORTA->DIR |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );          /* Set pin direction to output */
+                    if ( ptr_cfg[ i ].open_drain == TRUE )
+                    {
+                        gioPORTA->PDR |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Open drain */
+                    }
+                    else
+                    {
+                        gioPORTA->PDR |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Not open drain */
+                    }
+                    if ( ptr_cfg[ i ].value == FALSE )
+                    {
+                        gioPORTA->DOUT |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Set low */
+                    }
+                    else
+                    {
+                        gioPORTA->DOUT |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Set high */
+                    }
+                    break;
+                case eDIO_PORTB:
+                    gioPORTB->DIR |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );          /* Set pin direction to output */
+                    if ( ptr_cfg[ i ].open_drain == TRUE )
+                    {
+                        gioPORTB->PDR |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Open drain */
+                    }
+                    else
+                    {
+                        gioPORTB->PDR |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Not open drain */
+                    }
+                    if ( ptr_cfg[ i ].value == FALSE )
+                    {
+                        gioPORTB->DOUT |= ( uint32 ) ( ( uint32 ) 0U << ptr_cfg[ i ].pin );      /* Set low */
+                    }
+                    else
+                    {
+                        gioPORTB->DOUT |= ( uint32 ) ( ( uint32 ) 1U << ptr_cfg[ i ].pin );      /* Set high */
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    return ok;
+}
+
+void toggle_output_pin( E_DIO_OUTPUT_PIN_ID pin_id )
+{
+    S_DIO_OUTPUT_PIN_DEF * ptr_cfg = dioConfigGetDOConfig();
+
+    if ( ptr_cfg[ pin_id ].enabled == TRUE )
+    {
+        switch ( ptr_cfg[ pin_id ].port )
+        {
+        case eDIO_PORTA:
+            if gi
+            break;
+        case eDIO_PORTB:
+            break;
+        }
+    }
+}
+
+void gioToggleBit(gioPORT_t *port, uint32 bit)
+{
+/* USER CODE BEGIN (10) */
+/* USER CODE END */
+
+    if ((port->DIN & (uint32)((uint32)1U << bit)) != 0U)
+    {
+        port->DCLR = (uint32)1U << bit;
+    }
+    else
+    {
+        port->DSET = (uint32)1U << bit;
+    }
+}
+
+/*----------------------------------------------------------------------------\
+|   Private Function Implementations                                          |
+\----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------\
+|   End of fw_dio.c module                                                    |
+\----------------------------------------------------------------------------*/

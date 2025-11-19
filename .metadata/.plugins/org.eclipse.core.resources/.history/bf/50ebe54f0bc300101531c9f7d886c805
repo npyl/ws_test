@@ -1,0 +1,26 @@
+
+#define DELAY_VALUE 10000000
+
+/**
+ * main.c
+ */
+int main(void)
+{
+    /* CAUTION:
+     *   Call to dioHandlerInit must precede GIO initializations
+     */
+    dioHandlerInit();
+
+    // printf( "Initializing Digital Inputs\n" );
+    dioHandlerInitInputPins();
+
+    // printf( "Initializing Digital Outputs\n" );
+    dioHandlerInitOutputPins();
+
+    for (;;) {
+            gioToggleBit(gioPORTB, 6);
+            gioToggleBit(gioPORTB, 7);
+
+            for (i = 0; i < DELAY_VALUE; i++);
+    }
+}

@@ -1,0 +1,31 @@
+#include "fw_dio.h"
+
+#define DELAY_VALUE 10000000
+
+/**
+ * main.c
+ */
+int main(void)
+{
+    int i;
+
+    /* CAUTION:
+     *   Call to dioHandlerInit must precede GIO initializations
+     */
+    dioHandlerInit();
+
+    // printf( "Initializing Digital Inputs\n" );
+    dioHandlerInitInputPins();
+
+    // printf( "Initializing Digital Outputs\n" );
+    dioHandlerInitOutputPins();
+
+    for (;;) {
+        // gioToggleBit(gioPORTB, 6);
+        // gioToggleBit(gioPORTB, 7);
+        toggle_output_pin( eDIO_OUTPUT_PIN_LED_6 );
+        toggle_output_pin( eDIO_OUTPUT_PIN_LED_7 );
+
+        for (i = 0; i < DELAY_VALUE; i++);
+    }
+}

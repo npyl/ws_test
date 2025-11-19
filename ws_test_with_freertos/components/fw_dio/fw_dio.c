@@ -11,7 +11,7 @@
 |                                                                             |
 |   Author       : Jerry Pylarinos                                            |
 |                                                                             |
-|   Date         : 8 Éáí 2024                                                 |
+|   Date         : 8 ï¿½ï¿½ï¿½ 2024                                                 |
 |                                                                             |
 |-----------------------------------------------------------------------------|
 |                                                                             |
@@ -27,11 +27,9 @@
 |   Header Files                                                              |
 \----------------------------------------------------------------------------*/
 
-#include "HL_gio.h"
+#include "HL_reg_gio.h"
 
-#include "types.h"
 #include "fw_dio.h"
-#include "data_manager.h"
 
 /*----------------------------------------------------------------------------\
 |   Private Type Definitions                                                  |
@@ -43,83 +41,25 @@
 
 static const S_DIO_INPUT_PIN_DEF dio_input_pin_defs[ eDIO_NUM_INPUT_PINS ] =
 {
-     {
-          .label = "BUTTON_0",
-          .id = eDIO_INPUT_PIN_0,
-          .port = eDIO_PORTA,
-          .pin = 0u,
-          .pull = ePULL_DOWN,
-          .pull_enable = TRUE,
-          .value = 0,
-          .enabled = TRUE,
-     },
-     {
-          .label = "BUTTON_1",
-          .id = eDIO_INPUT_PIN_1,
-          .port = eDIO_PORTA,
-          .pin = 1u,
-          .pull = ePULL_DOWN,
-          .pull_enable = TRUE,
-          .value = 0,
-          .enabled = TRUE,
-     },
-     {
-          .label = "BUTTON_2",
-          .id = eDIO_INPUT_PIN_2,
-          .port = eDIO_PORTA,
-          .pin = 2u,
-          .pull = ePULL_DOWN,
-          .pull_enable = TRUE,
-          .value = 0,
-          .enabled = TRUE,
-     },
-     {
-          .label = "BUTTON_3",
-          .id = eDIO_INPUT_PIN_0,
-          .port = eDIO_PORTA,
-          .pin = 3u,
-          .pull = ePULL_DOWN,
-          .pull_enable = TRUE,
-          .value = 0,
-          .enabled = TRUE,
-     },
 };
 
 static const S_DIO_OUTPUT_PIN_DEF dio_output_pin_defs[ eDIO_NUM_OUTPUT_PINS ] =
 {
      {
-          .label = "DÏ0",
-          .id = eDIO_OUTPUT_PIN_0,
+          .label = "USER LED 2",
+          .id = eDIO_OUTPUT_PIN_LED_6,
           .port = eDIO_PORTB,
-          .pin = 0u,
-          .open_drain = FALSE,
+          .pin = 6u,
+          .open_drain = TRUE,
           .value = 0,
           .enabled = TRUE,
      },
      {
-          .label = "DÏ1",
-          .id = eDIO_OUTPUT_PIN_1,
+          .label = "USER LED 3",
+          .id = eDIO_OUTPUT_PIN_LED_7,
           .port = eDIO_PORTB,
-          .pin = 1u,
-          .open_drain = FALSE,
-          .value = 0,
-          .enabled = TRUE,
-     },
-     {
-          .label = "DÏ2",
-          .id = eDIO_OUTPUT_PIN_2,
-          .port = eDIO_PORTB,
-          .pin = 2u,
-          .open_drain = FALSE,
-          .value = 0,
-          .enabled = TRUE,
-     },
-     {
-          .label = "DÏ3",
-          .id = eDIO_OUTPUT_PIN_3,
-          .port = eDIO_PORTB,
-          .pin = 3u,
-          .open_drain = FALSE,
+          .pin = 7u,
+          .open_drain = TRUE,
           .value = 0,
           .enabled = TRUE,
      },
@@ -153,7 +93,7 @@ void dioHandlerInit( void )
 
 void set_digital_output( E_DIO_OUTPUT_PIN_ID pin_id, BOOLEAN value )
 {
-    S_DM_DIGITAL_IO *ptr_dm_digital_outputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
+    // S_DM_DIGITAL_IO *ptr_dm_digital_outputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
     const S_DIO_OUTPUT_PIN_DEF * const ptr_cfg = dioConfigGetDOConfig();
 
     if ( ( ptr_cfg[ pin_id ].enabled == TRUE ) && ( pin_id < eDIO_NUM_OUTPUT_PINS ) )
@@ -169,14 +109,14 @@ void set_digital_output( E_DIO_OUTPUT_PIN_ID pin_id, BOOLEAN value )
             default:
                 break;
         }
-        ptr_dm_digital_outputs->ptr_digital_io->digital_outputs[ pin_id ].value = value;
+        // ptr_dm_digital_outputs->ptr_digital_io->digital_outputs[ pin_id ].value = value;
     }
 }
 
 BOOLEAN read_digital_input( E_DIO_INPUT_PIN_ID pin_id )
 {
     BOOLEAN value;
-    S_DM_DIGITAL_IO *ptr_dm_digital_inputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
+    // S_DM_DIGITAL_IO *ptr_dm_digital_inputs = ( S_DM_DIGITAL_IO * ) dmDigitalsAccess();
     const S_DIO_INPUT_PIN_DEF * const ptr_cfg = dioConfigGetDIConfig();
 
     if ( ( ptr_cfg[ pin_id ].enabled == TRUE ) && ( pin_id < eDIO_NUM_INPUT_PINS ) )
@@ -192,7 +132,7 @@ BOOLEAN read_digital_input( E_DIO_INPUT_PIN_ID pin_id )
             default:
                 break;
         }
-        ptr_dm_digital_inputs->ptr_digital_io->digital_inputs[ pin_id ].value = value;
+        // ptr_dm_digital_inputs->ptr_digital_io->digital_inputs[ pin_id ].value = value;
     }
 
     return value;
@@ -345,6 +285,40 @@ BOOLEAN dioHandlerInitOutputPins( void )
     }
 
     return ok;
+}
+
+void toggle_output_pin( E_DIO_OUTPUT_PIN_ID pin_id )
+{
+    S_DIO_OUTPUT_PIN_DEF * ptr_cfg = dioConfigGetDOConfig();
+
+    if ( ptr_cfg[ pin_id ].enabled == TRUE )
+    {
+        switch ( ptr_cfg[ pin_id ].port )
+        {
+            case eDIO_PORTA:
+                if ((gioPORTA->DIN & (uint32)((uint32)1U << ptr_cfg[ pin_id ].pin)) != 0U)
+                {
+                    gioPORTA->DCLR = (uint32)1U << ptr_cfg[ pin_id ].pin;
+                }
+                else
+                {
+                    gioPORTA->DSET = (uint32)1U << ptr_cfg[ pin_id ].pin;
+                }
+                break;
+            case eDIO_PORTB:
+                if ((gioPORTB->DIN & (uint32)((uint32)1U << ptr_cfg[ pin_id ].pin)) != 0U)
+                {
+                    gioPORTB->DCLR = (uint32)1U << ptr_cfg[ pin_id ].pin;
+                }
+                else
+                {
+                    gioPORTB->DSET = (uint32)1U << ptr_cfg[ pin_id ].pin;
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 /*----------------------------------------------------------------------------\

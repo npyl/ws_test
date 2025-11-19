@@ -11,7 +11,7 @@
 |                                                                             |
 |   Author       : Jerry Pylarinos                                            |
 |                                                                             |
-|   Date         : 8 Éáí 2024                                                 |
+|   Date         : 8 ï¿½ï¿½ï¿½ 2024                                                 |
 |                                                                             |
 |-----------------------------------------------------------------------------|
 |                                                                             |
@@ -47,10 +47,6 @@ typedef enum
  */
 typedef enum
 {
-    eDIO_INPUT_PIN_0 = 0u,
-    eDIO_INPUT_PIN_1,
-    eDIO_INPUT_PIN_2,
-    eDIO_INPUT_PIN_3,
     eDIO_NUM_INPUT_PINS,
 } E_DIO_INPUT_PIN_ID;
 
@@ -75,10 +71,8 @@ typedef struct
  */
 typedef enum
 {
-    eDIO_OUTPUT_PIN_0 = 0u,
-    eDIO_OUTPUT_PIN_1,
-    eDIO_OUTPUT_PIN_2,
-    eDIO_OUTPUT_PIN_3,
+    eDIO_OUTPUT_PIN_LED_6 = 0u,
+    eDIO_OUTPUT_PIN_LED_7,
     eDIO_NUM_OUTPUT_PINS,
 } E_DIO_OUTPUT_PIN_ID;
 

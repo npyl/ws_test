@@ -1,3 +1,7 @@
+
+
+
+
 /*----------------------------------------------------------------------------\
 |          Copyright(c) 2024 Jerry Pylarinos.                                 |
 |          This program is protected by copyright and information             |
@@ -7,7 +11,7 @@
 |                                                                             |
 |-----------------------------------------------------------------------------|
 |                                                                             |
-|   Module Name  : app_task_1000ms.c Module File.                             |
+|   Module Name  : tsk_c0_1000ms_task.c Module File.                          |
 |                                                                             |
 |   Author       : Jerry Pylarinos                                            |
 |                                                                             |
@@ -15,7 +19,7 @@
 |                                                                             |
 |-----------------------------------------------------------------------------|
 |                                                                             |
-|   Module for tasks that need to execute every 1000ms                        |
+|   Application 1000ms task Module                                            |
 |                                                                             |
 \----------------------------------------------------------------------------*/
 
@@ -27,10 +31,15 @@
 |   Header Files                                                              |
 \----------------------------------------------------------------------------*/
 
-#include "fw_globals.h"
-#include "app_task_1000ms.h"
+#include <stdio.h>
 
-#include "fw_dio.h"
+#include "my_task.h"
+#include "FreeRTOS.h"
+#include "os_task.h"
+#include "taskParams.h"
+#include "coreParams.h"
+#include "setup.h"
+#include "trace.h"
 
 /*----------------------------------------------------------------------------\
 |   Public Constant Definitions                                               |
@@ -60,17 +69,72 @@
 |   Public Function Implementations                                           |
 \----------------------------------------------------------------------------*/
 
-void app_task_1000ms_init( void )
-{
-//    toggle_output_pin(eDIO_OUTPUT_PIN_LED_6);
-	;
+/*----------------------------------------------------------------------------\
+|                                                                             |
+|    Procedure         :  task_C0_1000MS_init                                 |
+|                                                                             |
+|    Description       :  Function to initialize Core 0 - 1000ms task         |
+|                                                                             |
+|    Inputs            :  none.                                               |
+|                                                                             |
+|    Outputs           :  none.                                               |
+|                                                                             |
+|    Return            :  none.                                               |
+|                                                                             |
+|    Warnings          :  none.                                               |
+|                                                                             |
+\----------------------------------------------------------------------------*/
+
+
+void task_C0_my_task_init( void ) {
+
 }
 
-void app_task_1000ms( void )
+/*----------------------------------------------------------------------------\
+|                                                                             |
+|    Procedure         :  task_C0_1000MS                                      |
+|                                                                             |
+|    Description       :  Core 0 - 1000ms task                                |
+|                                                                             |
+|    Inputs            :  Pointer to task's parameters.                       |
+|                                                                             |
+|    Outputs           :  none.                                               |
+|                                                                             |
+|    Return            :  none.                                               |
+|                                                                             |
+|    Warnings          :  none.                                               |
+|                                                                             |
+\----------------------------------------------------------------------------*/
+
+
+void task_C0_my_task( void *params )
 {
-    // while (1) {
-       toggle_output_pin(eDIO_OUTPUT_PIN_LED_6);
-    // }
+    portBaseType ok;
+    S_SERIAL_TRACE_INFO SerialTraceInfo;
+    S_TASKPROC_DATA *procdata   = ( S_TASKPROC_DATA* ) params;
+
+    tskInitTaskProcData( procdata );        /* Initialize task process data */
+    tskInitTraceInfo( procdata, &SerialTraceInfo );   /* Initialize task's constant serial trace info */
+
+    for ( ;; )
+    {
+#if 0
+        ok = xQueueSend( procdata->xSerialTraceHandle, &SerialTraceInfo, 0 );
+        /* Examine reason for unsuccessful send, eg. Queue Full ( ok = -4 ) */
+        ( ( ok == pdPASS ) ? ( { __asm volatile ( " nop" ); } ) : ( printf( "task_C0_1000MS - Serial Debug Queue Error: %d\r\n", ok ) ) );
+#endif
+
+        /* Update task process data */
+        ok = tskUpdateTaskProcData( procdata );
+        //?? ( ( ok == pdPASS ) ? ( { __asm volatile ( " nop" ); } ) : ( printf( "Task overrun: 1000ms\r\n" ) ) );
+
+#if 0
+        printf( "C0 1000ms task callcount: %d\r\n", procdata->callcount );
+#endif
+
+        /* Block until next run for the configured period */
+        vTaskDelayUntil( ( TickType_t * ) &( procdata->starttime ), ( TickType_t ) procdata->period );
+    }
 }
 
 /*----------------------------------------------------------------------------\
@@ -78,5 +142,5 @@ void app_task_1000ms( void )
 \----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------\
-|   End of app_task_1000ms.c module                                           |
+|   End of tsk_C0_1000ms_task.c Module                                        |
 \----------------------------------------------------------------------------*/

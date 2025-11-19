@@ -54,6 +54,7 @@
 //#include "tsk_uart_gk.h"
 //#include "tsk_i2c_gk.h"
 //#include "tsk_spi_gk.h"
+#include "my_task.h"
 
 /*----------------------------------------------------------------------------\
 |   Public Constant Definitions                                               |
@@ -98,7 +99,7 @@ static const S_TASK_CONFIG TaskConfigList[] =
 	 * Note: Must match S_TASK_CONFIG struct.
 	 */
 	/* taskid			 	mainproc			initproc		   		stacksize	name[20] */
-    {  E_TASKID_C0_GK,      task_C0_GK,         task_C0_GK_init,        128UL,      "C0 GK task" },         /* Application serial debug queue Gatekeeper task */
+//    {  E_TASKID_C0_GK,      task_C0_GK,         task_C0_GK_init,        128UL,      "C0 GK task" },         /* Application serial debug queue Gatekeeper task */
 	{  E_TASKID_C0_2MS,	 	task_C0_2MS,		task_C0_2MS_init,		128UL,		"C0 2ms Task" },		/* 2ms task */
 	{  E_TASKID_C0_10MS,	task_C0_10MS,		task_C0_10MS_init,		128UL,		"C0 10ms Task" },		/* 10ms task */
 	{  E_TASKID_C0_25MS,	task_C0_25MS,		task_C0_25MS_init,		128UL,		"C0 25ms Task" },		/* 25ms task */
@@ -111,6 +112,7 @@ static const S_TASK_CONFIG TaskConfigList[] =
 //    {  E_TASKID_C0_UART_GK, task_C0_uart_gk,    task_C0_uart_gk_init,   128UL,      "C0 UART GK Task" },    /* UART interfaces Gatekeeper task */
 //    {  E_TASKID_C0_I2C_GK,  task_C0_i2c_gk,     task_C0_i2c_gk_init,    128UL,      "C0 I2C GK Task" },     /* I2C interfaces Gatekeeper task */
 //    {  E_TASKID_C0_SPI_GK,  task_C0_spi_gk,     task_C0_spi_gk_init,    128UL,      "C0 SPI GK Task" },     /* SPI interfaces Gatekeeper task */
+    {  E_TASKID_C0_MY_TASK,  task_C0_my_task,     task_C0_my_task_init,    128UL,      "C0 My Task Task" },     /* My Task task */
 };
 
 #define TaskConfigCount sizeof( TaskConfigList ) / sizeof( TaskConfigList[ 0 ] )
@@ -127,7 +129,7 @@ static const S_TASK_PARAMS TaskParamsList[] =
 	 */
 	/*                                                                   				|-- User Defined Task Encapsulated Variables --------> */
 	/* coreid      taskid				enabled		period      priority				Serial trace handle */
-	{  eCORE_0,    E_TASKID_C0_GK,		TRUE,       100u,		tskIDLE_PRIORITY + 7,	( QueueHandle_t ) &xSerialTraceHandle, },
+//	{  eCORE_0,    E_TASKID_C0_GK,		TRUE,       100u,		tskIDLE_PRIORITY + 7,	( QueueHandle_t ) &xSerialTraceHandle, },
 	{  eCORE_0,    E_TASKID_C0_2MS,		TRUE,		2u,			tskIDLE_PRIORITY + 9,	( QueueHandle_t ) &xSerialTraceHandle, },
 	{  eCORE_0,    E_TASKID_C0_10MS,	TRUE,		10u,		tskIDLE_PRIORITY + 9,	( QueueHandle_t ) &xSerialTraceHandle, },
 	{  eCORE_0,    E_TASKID_C0_25MS,	TRUE,		25u,		tskIDLE_PRIORITY + 8,	( QueueHandle_t ) &xSerialTraceHandle, },
@@ -137,9 +139,11 @@ static const S_TASK_PARAMS TaskParamsList[] =
 	{  eCORE_0,    E_TASKID_C0_1000MS,	TRUE,		1000u,		tskIDLE_PRIORITY + 6,	( QueueHandle_t ) &xSerialTraceHandle, },
 	{  eCORE_0,    E_TASKID_C0_2000MS,	TRUE,		2000u,		tskIDLE_PRIORITY + 2,	( QueueHandle_t ) &xSerialTraceHandle, },
 	{  eCORE_0,    E_TASKID_C0_5000MS,	TRUE,		5000u,		tskIDLE_PRIORITY + 1,	( QueueHandle_t ) &xSerialTraceHandle, },
-    {  eCORE_0,    E_TASKID_C0_UART_GK, TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
-    {  eCORE_0,    E_TASKID_C0_I2C_GK,  TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
-    {  eCORE_0,    E_TASKID_C0_SPI_GK,  TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
+//    {  eCORE_0,    E_TASKID_C0_UART_GK, TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
+//    {  eCORE_0,    E_TASKID_C0_I2C_GK,  TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
+//    {  eCORE_0,    E_TASKID_C0_SPI_GK,  TRUE,       100u,       tskIDLE_PRIORITY + 7,   ( QueueHandle_t ) &xSerialTraceHandle, },
+    {  eCORE_0,     E_TASKID_C0_MY_TASK,  TRUE,     333u,    tskIDLE_PRIORITY + 7, ( QueueHandle_t ) &xSerialTraceHandle, },
+
 };
 
 static const U8 TaskParamsCount = ( U8 ) ( sizeof( TaskParamsList ) / sizeof( TaskParamsList[ 0 ] ) );
@@ -453,6 +457,7 @@ portBaseType tskCreateCoreTasks( U8 coreid )
 					else
 					{
 						// printf( "Unsuccessfully created task: %s.  Error: %d\r\n", ptr_task_config_list->name, ptr_task_proc_data->error );
+					    // __asm( " nop" );
 					}
 
 					/* Run task's init function if defined ( Note: Task must have been created ) */

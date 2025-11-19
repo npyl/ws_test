@@ -8,6 +8,4 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-int actual_main();
-
 #endif /* MAIN_H_ */

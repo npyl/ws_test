@@ -27,13 +27,8 @@
 |   Header Files                                                              |
 \----------------------------------------------------------------------------*/
 
-#include <string.h>
-
-#include "fw_globals.h"
-#include "fw_gio_het.h"
-#include "fw_gio_mibspi.h"
-#include "fw_gio_dmm.h"
 #include "app_task_2000ms.h"
+#include "fw_dio.h"
 
 /*----------------------------------------------------------------------------\
 |   Public Constant Definitions                                               |
@@ -51,13 +46,9 @@
 |   Private Constant Definitions                                              |
 \----------------------------------------------------------------------------*/
 
-#define dmmPORT ((gioPORT_t *)0xFFFFF770U)
-
 /*----------------------------------------------------------------------------\
 |   Private Data Definitions                                                  |
 \----------------------------------------------------------------------------*/
-
-static int led = 0;
 
 /*----------------------------------------------------------------------------\
 |   Private Function Declarations                                             |
@@ -74,12 +65,7 @@ void app_task_2000ms_init( void )
 
 void app_task_2000ms( void )
 {
-    // toggle_led( LEFT_BOTTOM, &led );
-
-    led ^= 1;
-    set_het_output( eOUT_LedLeftBottom, led );
-    set_mibspi_output( eOUT_PIN_W9_GainActive1, led );
-    set_dmm_output( eOUT_PIN_H17_RS485DE, led );
+    // toggle_output_pin(eDIO_OUTPUT_PIN_LED_7);
 }
 
 /*----------------------------------------------------------------------------\

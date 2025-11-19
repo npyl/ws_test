@@ -28,6 +28,7 @@
 \----------------------------------------------------------------------------*/
 
 #include "fw_globals.h"
+#include "fw_dio.h"
 #include "app_task_5000ms.h"
 
 /*----------------------------------------------------------------------------\
@@ -62,12 +63,14 @@ static int led = 0;
 
 void app_task_5000ms_init( void )
 {
-	;
+    set_digital_output( eDIO_OUTPUT_PIN_LED_7, TRUE );
 }
 
 void app_task_5000ms( void )
 {
     // toggle_led( RIGHT_MIDDLE, &led );
+    toggle_output_pin(eDIO_OUTPUT_PIN_LED_7);
+    // __asm( " nop" );
 }
 
 /*----------------------------------------------------------------------------\

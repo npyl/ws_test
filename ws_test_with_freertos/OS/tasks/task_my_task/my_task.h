@@ -3,58 +3,28 @@
 |          This program is protected by copyright and information             |
 |          contained therein is confidential. The program may not be          |
 |          copied and the information may not be used or disclosed            |
-|          except with the written permission of the proprietor(s).           |
+|          except with the written permission of the proprietors.             |
 |                                                                             |
 |-----------------------------------------------------------------------------|
 |                                                                             |
-|   Module Name  : taskIDs.h Header File.                                     |
+|   Module Name  : tsk_c0_1000ms_task.h Header File.                          |
 |                                                                             |
 |   Author       : Jerry Pylarinos                                            |
 |                                                                             |
-|   Date         : 7 ��� 2024                                                 |
-|                                                                             |
-|-----------------------------------------------------------------------------|
-|                                                                             |
-|   <Module Header Description>                                               |
+|   Date         : 7 Éáí 2024                                                 |
 |                                                                             |
 \----------------------------------------------------------------------------*/
 
-#ifndef taskIDs_H
-#define taskIDs_H
+#ifndef TASK_C0_ΜΥ_TASK_H
+#define TASK_C0_ΜΥ_TASK_H
 
 /*----------------------------------------------------------------------------\
 |   Header Files                                                              |
 \----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------\
-|   Public Type Definitions                                                   |
+|   Public Type Declarations                                                  |
 \----------------------------------------------------------------------------*/
-
-/*
- * Task IDs
- */
-typedef enum
-{
-    /*
-     * Include here the application specific Task IDs.
-     * MUST be in same order as in TaskParamsList and TaskConfigList.
-     */
-//    E_TASKID_C0_GK = 0,
-    E_TASKID_C0_2MS,
-    E_TASKID_C0_10MS,
-    E_TASKID_C0_25MS,
-    E_TASKID_C0_50MS,
-    E_TASKID_C0_100MS,
-    E_TASKID_C0_500MS,
-    E_TASKID_C0_1000MS,
-    E_TASKID_C0_2000MS,
-    E_TASKID_C0_5000MS,
-//    E_TASKID_C0_UART_GK,
-//    E_TASKID_C0_I2C_GK,
-//    E_TASKID_C0_SPI_GK,
-    E_TASKID_C0_MY_TASK,
-    E_TASKID_MAX
-} E_TASKID;
 
 /*----------------------------------------------------------------------------\
 |   Public Constant Declarations                                              |
@@ -68,8 +38,11 @@ typedef enum
 |   Public Function Declarations                                              |
 \----------------------------------------------------------------------------*/
 
+void task_C0_my_task_init( void );
+void task_C0_my_task( void *params );
+
 /*----------------------------------------------------------------------------\
-|   End of taskIDs.h header file                                              |
+|   End of tsk_c0_1000ms_task.h Header File                                   |
 \----------------------------------------------------------------------------*/
 
-#endif  /* taskIDs_H */
+#endif /* TASK_C0_1000MS_TASK_H */
